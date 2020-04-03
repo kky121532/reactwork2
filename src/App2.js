@@ -17,6 +17,7 @@ class App extends Component {
                 text: text,
                 id: this.id,
                 score: 0,
+                done: false,
             }),
         });
 
@@ -30,7 +31,7 @@ class App extends Component {
     }
 
     handleScore = (id, type) => {
-        const maxLength = 5;
+        const maxLength = 9.9;
 
         this.setState({
             list: this.state.list.map(item => {
@@ -40,9 +41,9 @@ class App extends Component {
                     
                     // 스코어의 최소, 최댓값 검사
                     if (type==='plus' && is < maxLength) {
-                        is++;
+                        is = is + 0.1;
                     } else if (type==='minus' && is > 0)  {
-                        is--;
+                        is = is - 0.1;
                     }
                     
                     return {
@@ -56,14 +57,29 @@ class App extends Component {
         });
     }
 
+    handleToggle = id => {
+        this.setState({
+            list: this.state.list.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        done: !item.done,
+                    }
+                } else {
+                    return item;
+                }
+            })
+        });
+    }
+
 	render() {
-        const type = 'SONG';
+        const type = 'Feed';
 
 		return (
 			<div className="App">
 				<h3>LIST OF {type}</h3>
 				<CreateForm onInsert={this.handleInsert} type={type} />
-				<List list={this.state.list} onRemove={this.handleRemove} onScore={this.handleScore} />
+				<List list={this.state.list} onRemove={this.handleRemove} onToggle={this.handleToggle} onScore={this.handleScore} />
 			</div>
 		);
 	}
